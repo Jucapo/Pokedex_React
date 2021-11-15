@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./App.css";
+import "../../App.css";
 import axios from "axios";
 
 const App = () => {
@@ -10,23 +10,25 @@ const App = () => {
   const handleChange = (e) => {
     setPokemon(e.target.value.toLowerCase());
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     getPokemon();
   };
+
   const getPokemon = async () => {
-    const toArray = [];
+    const pokemonInfo = [];
     try {
       const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`;
       const res = await axios.get(url);
-      toArray.push(res.data);
+      pokemonInfo.push(res.data);
       setPokemonType(res.data.types[0].type.name);
-      setPokemonData(toArray);
+      setPokemonData(pokemonInfo);
+      console.log(pokemonData);
     } catch (e) {
       console.log(e);
     }
   };
-  console.log(pokemonData);
 
   return (
     <div className="App">
