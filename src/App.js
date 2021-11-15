@@ -35,8 +35,6 @@ const App = () => {
           <input type="text" onChange={handleChange} placeholder="enter pokemon name" />
         </label>
       </form>
-      {/* <ul>{pokemonData}</ul> */}
-      {/* <p>{[pokemonData]}</p> */}
       {pokemonData.map((data) => {
         return (
           <div className="container">
