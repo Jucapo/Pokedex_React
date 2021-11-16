@@ -26,14 +26,14 @@ const useInitialState = () => {
   const addCatches = (payload) => {
     setState({
       ...state,
-      catches: [...state.catches, payload],
+      catchesPokemon: [...state.catchesPokemon, payload],
     });
   };
 
   const removeCatches = (payload, indexToRemove) => {
     setState({
       ...state,
-      cart: state.catches.filter((payload, currentIndex) => currentIndex !== indexToRemove),
+      catchesPokemon: state.catchesPokemon.filter((payload, currentIndex) => currentIndex !== indexToRemove),
     });
   };
 

@@ -1,4 +1,5 @@
 import React, { useState, useContext, useMemo, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 import AppContext from "../../context/AppContext";
 import axios from "axios";
 
@@ -13,7 +14,7 @@ import { Modal, ModalBody } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.css";
 
 const Home = () => {
-  const { state } = useContext(AppContext);
+  const { state, addCatches } = useContext(AppContext);
   const pokemons = state.allPokemon;
   const [pokemonData, setPokemonData] = useState([]);
   const [modal, setModal] = useState(false);
@@ -59,6 +60,7 @@ const Home = () => {
       const res = await axios.get(url);
       pokemonInfo.push(res.data);
       setPokemonData(pokemonInfo);
+      console.log(pokemonInfo);
     } catch (e) {
       console.log(e);
     }
@@ -69,9 +71,11 @@ const Home = () => {
   };
 
   const { query, setQuery, filteredPokemon } = useSearchPokemon(pokemons);
+  const navigate = useNavigate();
 
   return (
     <Fragment>
+      <div className="titleContainer">Pokedex</div>
       <div className="homeContainer">
         <div className="searchContainer">
           <div className="formContainer">
@@ -88,7 +92,7 @@ const Home = () => {
               </label>
             </form>
           </div>
-          <img className="homeIcon" src={homeIcon} alt="home" />
+          <img className="homeIcon" onClick={() => navigate("/catches")} src={homeIcon} alt="home" />
         </div>
         <div className="detailContainer">
           <div className="listContainer">
@@ -109,7 +113,7 @@ const Home = () => {
                     <img className="pokemonImg" src={data.sprites["front_default"]} alt="pokemon" />
                   </div>
                   <div className="rigthColumnCard">
-                    <div className="buttonContianer">
+                    <div className="buttonContianer" onClick={() => addCatches(data)}>
                       <img className="catchIcon" src={catchIcon} alt="catch" />
                       <h4>CATCH</h4>
                     </div>
@@ -133,8 +137,20 @@ const Home = () => {
                 <img className="closeIcon" alt="close" onClick={() => openModal()} src={closeIcon} />
               </div>
               <div className="bodyPopUp">
-                <img className="pokemonImg" src={data.sprites["front_default"]} alt="pokemon" />
-                <div className="pokemonDetails">Type: {data.types[0].type.name}</div>
+                <img className="pokemonImgDetail" src={data.sprites["front_default"]} alt="pokemon" />
+                <div className="pokemonDetails">
+                  <h4>Type: {capitalize(data.types[0].type.name)}</h4>
+                  <h4>Height: {Math.round(data.height * 3.9)}"</h4>
+                  <h4>Weight: {Math.round(data.weight / 4.3)} lbs</h4>
+                  <h4>Abilities: </h4>
+                  {data.abilities.map((ability) => {
+                    return <li>{ability.ability.name}</li>;
+                  })}
+                </div>
+                <div className="buttonContianer catchDetails" onClick={() => addCatches(data)}>
+                  <img className="catchIcon" src={catchIcon} alt="catch" />
+                  <h4>CATCH</h4>
+                </div>
               </div>
             </ModalBody>
           </Modal>
