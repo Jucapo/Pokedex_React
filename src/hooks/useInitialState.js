@@ -7,20 +7,17 @@ const useInitialState = () => {
 
   useEffect(() => {
     getPokemonsList();
-    console.log(state.allPokemon);
   }, []);
 
   const getPokemonsList = async () => {
-    const pokemonListArray = [];
     try {
       const limit = 150;
       const offset = 0;
       const url = `https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limit}`;
       const res = await axios.get(url);
-      pokemonListArray.push(res.data.results);
       setState({
         ...state,
-        allPokemon: [...state.allPokemon, ...pokemonListArray],
+        allPokemon: res.data.results,
       });
     } catch (e) {
       console.log(e);
@@ -30,14 +27,14 @@ const useInitialState = () => {
   const addCatches = (payload) => {
     setState({
       ...state,
-      cart: [...state.cart, payload],
+      catches: [...state.catches, payload],
     });
   };
 
   const removeCatches = (payload, indexToRemove) => {
     setState({
       ...state,
-      cart: state.cart.filter((item, currentIndex) => currentIndex !== indexToRemove),
+      cart: state.catches.filter((payload, currentIndex) => currentIndex !== indexToRemove),
     });
   };
 
