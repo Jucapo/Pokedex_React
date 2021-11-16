@@ -13,6 +13,11 @@ import closeIcon from "../../assets/close-icon.png";
 import { Modal, ModalBody } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.css";
 
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
+toast.configure();
+
 const Home = () => {
   const { state, addCatches } = useContext(AppContext);
   const pokemons = state.allPokemon;
@@ -31,6 +36,10 @@ const Home = () => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
+  };
+
+  const notify = (pokemon) => {
+    toast.success(`You caught a ${pokemon.name}!`, { position: toast.POSITION.TOP_RIGHT });
   };
 
   const useSearchPokemon = (pokemons) => {
@@ -68,6 +77,11 @@ const Home = () => {
 
   const capitalize = (word) => {
     return word[0].toUpperCase() + word.slice(1);
+  };
+
+  const catchPokemon = (pokemon) => {
+    addCatches(pokemon);
+    notify(pokemon);
   };
 
   const { query, setQuery, filteredPokemon } = useSearchPokemon(pokemons);
@@ -113,7 +127,7 @@ const Home = () => {
                     <img className="pokemonImg" src={data.sprites["front_default"]} alt="pokemon" />
                   </div>
                   <div className="rigthColumnCard">
-                    <div className="buttonContianer" onClick={() => addCatches(data)}>
+                    <div className="buttonContianer" onClick={() => catchPokemon(data)}>
                       <img className="catchIcon" src={catchIcon} alt="catch" />
                       <h4>CATCH</h4>
                     </div>
@@ -147,7 +161,7 @@ const Home = () => {
                     return <li>{ability.ability.name}</li>;
                   })}
                 </div>
-                <div className="buttonContianer catchDetails" onClick={() => addCatches(data)}>
+                <div className="buttonContianer catchDetails" onClick={() => catchPokemon(data)}>
                   <img className="catchIcon" src={catchIcon} alt="catch" />
                   <h4>CATCH</h4>
                 </div>

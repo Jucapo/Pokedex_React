@@ -13,8 +13,13 @@ import closeIcon from "../../assets/close-icon.png";
 import { Modal, ModalBody } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.css";
 
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
+toast.configure();
+
 const Catches = () => {
-  const { state } = useContext(AppContext);
+  const { state, removeCatches } = useContext(AppContext);
   const pokemons = state.catchesPokemon;
   const [pokemonData, setPokemonData] = useState([]);
   const [modal, setModal] = useState(false);
@@ -33,12 +38,14 @@ const Catches = () => {
     transform: "translate(-50%, -50%)",
   };
 
+  const notify = (pokemon) => {
+    toast.warning(`You release a ${pokemon.name}!`, { position: toast.POSITION.TOP_RIGHT });
+  };
+
+
   const useSearchPokemon = (pokemons) => {
     const [query, setQuery] = useState("");
     const [filteredPokemon, setfilteredPokemon] = useState(pokemons);
-
-    console.log(pokemons);
-
     useMemo(() => {
       setfilteredPokemon(
         pokemons.filter((pokemon) => {
@@ -46,7 +53,6 @@ const Catches = () => {
         })
       );
     }, [pokemons, query]);
-    console.log("filteredPokemon", filteredPokemon);
     return { query, setQuery, filteredPokemon };
   };
 
@@ -74,6 +80,11 @@ const Catches = () => {
 
   const { query, setQuery, filteredPokemon } = useSearchPokemon(pokemons);
   const navigate = useNavigate();
+
+  const releasePokemon = (pokemon) => {
+    removeCatches(pokemon);
+    notify(pokemon);
+  };
 
   return (
     <Fragment>
@@ -116,7 +127,7 @@ const Catches = () => {
                   </div>
                   <div className="rigthColumnCard">
                     <div className="buttonContianer">
-                      <img className="releaseIcon" src={releaseIcon} alt="catch" />
+                      <img className="releaseIcon" src={releaseIcon} onClick={() => releasePokemon(data)} alt="catch" />
                       <h4>RELEASE</h4>
                     </div>
                     <div className="buttonContianer ml1" onClick={() => openModal()}>
@@ -150,7 +161,7 @@ const Catches = () => {
                   })}
                 </div>
                 <div className="buttonContianer catchDetails">
-                  <img className="releaseIcon" src={releaseIcon} alt="catch" />
+                  <img className="releaseIcon" onClick={() => releasePokemon(data)}  src={releaseIcon} alt="catch" />
                   <h4>RELEASE</h4>
                 </div>
               </div>

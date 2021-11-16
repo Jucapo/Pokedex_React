@@ -30,10 +30,10 @@ const useInitialState = () => {
     });
   };
 
-  const removeCatches = (payload, indexToRemove) => {
+  const removeCatches = (payload) => {
     setState({
       ...state,
-      catchesPokemon: state.catchesPokemon.filter((payload, currentIndex) => currentIndex !== indexToRemove),
+      catchesPokemon: state.catchesPokemon.filter((pokemon) => pokemon.name  !== payload.name),
     });
   };
 
