@@ -9,7 +9,7 @@ import catchIcon from "../../assets/catch.png";
 import detailIcon from "../../assets/details.png";
 import closeIcon from "../../assets/close-icon.png";
 
-import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Modal, ModalBody } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.css";
 
 const Home = () => {
@@ -23,7 +23,9 @@ const Home = () => {
   };
 
   const modalStyle = {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#000a64",
+    maxWidth: "800px",
+    width: "100%",
     position: "absolute",
     top: "50%",
     left: "50%",
@@ -124,15 +126,15 @@ const Home = () => {
       </div>
       {pokemonData.map((data) => {
         return (
-          <Modal isOpen={modal} style={modalStyle}>
+          <Modal className="popupDetails" isOpen={modal} style={modalStyle}>
             <ModalBody>
               <div className="headerPopUp">
                 <div className="pokemonNamePopUp">{capitalize(data.name)}</div>
-                <img className="closeIcon" src={closeIcon} alt="close" />
+                <img className="closeIcon" alt="close" onClick={() => openModal()} src={closeIcon} />
               </div>
               <div className="bodyPopUp">
                 <img className="pokemonImg" src={data.sprites["front_default"]} alt="pokemon" />
-                <div>ATAKCS</div>
+                <div className="pokemonDetails">Type: {data.types[0].type.name}</div>
               </div>
             </ModalBody>
           </Modal>

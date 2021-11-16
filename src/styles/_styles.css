@@ -110,15 +110,15 @@ label {
   background-image: url("../assets/pokemon_name.png");
   background-repeat: no-repeat;
   background-size: 100%;
-  height: 52px;
-  width: 100%;
+  height: 80px;
+  width: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: 600;
   font-family: "Times New Roman", Times, serif;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 }
 
 .pokemonImg {
@@ -182,8 +182,8 @@ h4 {
 .closeIcon {
   height: 3em;
   position: absolute;
-  right: 0;
-  top: 0;
+  right: 10px;
+  top: 10px;
 }
 
 .headerPopUp {
@@ -192,4 +192,23 @@ h4 {
   justify-content: space-around;
   align-items: center;
   padding: 1rem;
+}
+
+.bodyPopUp {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background-color: #e2e5ee;
+  border-radius: 1rem;
+}
+
+.pokemonDetails {
+  width: 600px;
+}
+
+.popupDetails .modal-content {
+  background-color: #000a64;
+  border-radius: 1rem;
 }
