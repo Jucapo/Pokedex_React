@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import AppContext from "../../context/AppContext";
 import axios from "axios";
 import "../../styles/_styles.css";
@@ -8,13 +8,23 @@ import catchIcon from "../../assets/catch.png";
 import detailIcon from "../../assets/details.png";
 
 const Home = () => {
-  const [pokemon, setPokemon] = useState("");
   const [pokemonData, setPokemonData] = useState([]);
+  const { state, setState } = useContext(AppContext);
+  const pokemons = state.allPokemon;
 
-  const { state, addCatches } = useContext(AppContext);
+  const useSearchPokemon = (pokemons) => {
+    const [query, setQuery] = useState("");
+    const [filteredPokemon, setfilteredPokemon] = useState(pokemons);
 
-  const handleChange = (e) => {
-    setPokemon(e.target.value.toLowerCase());
+    useMemo(() => {
+      setfilteredPokemon(
+        pokemons.filter((pokemon) => {
+          return pokemon.name.toLowerCase().includes(query.toLowerCase());
+        })
+      );
+    }, [pokemons, query]);
+
+    return { query, setQuery, filteredPokemon };
   };
 
   const handleSubmit = (e) => {
@@ -22,18 +32,23 @@ const Home = () => {
     getPokemon();
   };
 
-  const getPokemon = async () => {
+  const getPokemon = async (pokemonName) => {
     const pokemonInfo = [];
     try {
-      const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`;
+      const url = `https://pokeapi.co/api/v2/pokemon/${pokemonName || query}`;
       const res = await axios.get(url);
       pokemonInfo.push(res.data);
       setPokemonData(pokemonInfo);
-      console.log(pokemonData);
     } catch (e) {
       console.log(e);
     }
   };
+
+  const capitalize = (word) => {
+    return word[0].toUpperCase() + word.slice(1);
+  };
+
+  const { query, setQuery, filteredPokemon } = useSearchPokemon(pokemons);
 
   return (
     <div className="homeContainer">
@@ -41,7 +56,14 @@ const Home = () => {
         <div className="formContainer">
           <form onSubmit={handleSubmit}>
             <label>
-              <input type="text" onChange={handleChange} placeholder="enter pokemon name" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                }}
+                placeholder="Enter Pokemon Name"
+              />
             </label>
           </form>
         </div>
@@ -49,8 +71,12 @@ const Home = () => {
       </div>
       <div className="detailContainer">
         <div className="listContainer">
-          {state.allPokemon.map((pokemon) => {
-            return <div className="listItem">{pokemon.name} </div>;
+          {filteredPokemon.map((pokemon) => {
+            return (
+              <div key={pokemon.name} className="listItem" onClick={getPokemon.bind(this, pokemon.name)}>
+                {capitalize(pokemon.name)}
+              </div>
+            );
           })}
         </div>
         <div className="cardContainer">
@@ -58,12 +84,18 @@ const Home = () => {
             return (
               <div className="cardBodyContainer">
                 <div className="leftColumnCard">
-                  <div className="pokemonName">{data.name}</div>
-                  <img className="pokemonImg" src={data.sprites["front_default"]} />
+                  <div className="pokemonName">{capitalize(data.name)}</div>
+                  <img className="pokemonImg" src={data.sprites["front_default"]} alt="pokemon" />
                 </div>
                 <div className="rigthColumnCard">
-                  <img className="catchIcon" src={catchIcon} alt="catch" />
-                  <img className="detailsIcon" src={detailIcon} alt="datails" />
+                  <div className="buttonContianer">
+                    <img className="catchIcon" src={catchIcon} alt="catch" />
+                    <h4>CATCH</h4>
+                  </div>
+                  <div className="buttonContianer ml1">
+                    <img className="detailsIcon" src={detailIcon} alt="datails" />
+                    <h4>DETAIL</h4>
+                  </div>
                 </div>
               </div>
             );

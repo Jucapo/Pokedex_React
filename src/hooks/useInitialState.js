@@ -6,23 +6,22 @@ const useInitialState = () => {
   const [state, setState] = useState(initialState);
 
   useEffect(() => {
+    const getPokemonsList = async () => {
+      try {
+        const limit = 150;
+        const offset = 0;
+        const url = `https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limit}`;
+        const res = await axios.get(url);
+        setState({
+          ...state,
+          allPokemon: res.data.results,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    };
     getPokemonsList();
   }, []);
-
-  const getPokemonsList = async () => {
-    try {
-      const limit = 150;
-      const offset = 0;
-      const url = `https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limit}`;
-      const res = await axios.get(url);
-      setState({
-        ...state,
-        allPokemon: res.data.results,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   const addCatches = (payload) => {
     setState({
